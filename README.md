@@ -1,5 +1,8 @@
 # GME_Ticker
-A smooth brained ticker for GME ape's.
+A smooth brained ticker for GME ape's. Coded on a whim for kicks so if you're looking 
+for a regression tested work horse and a dynamic solution that will work anywhere, I'm sorry to day
+you didn't find it. BUT I'm happy to try and make it better if you need, just lmk otherwise don't expect 
+updates.
 
 Overview:
 Pulls real-time GME quotes from yfinance using a python script.
