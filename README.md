@@ -1,7 +1,6 @@
 # GME_Ticker
 A smooth brained ticker for GME ape's. Coded on a whim for kicks so if you're looking 
-for a regression tested work horse and a dynamic solution that will work anywhere, I'm sorry to say
-you didn't find it. BUT I'm happy to try and make it better if you need, just lmk otherwise don't expect 
+for a regression tested work horse and a dynamic solution that will work anywhere, this is not it. BUT I'm happy to try and make it better if you need, just lmk otherwise don't expect 
 updates.
 
 Overview:
