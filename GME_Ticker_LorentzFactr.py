@@ -28,7 +28,7 @@ def get_current_price(symbol):
     return last_quote
 
 
-#Main just lives a life of looping every 9.5 seconds...
+#Main just lives a life of looping every 9.5 seconds..."What is my purpose?" "You serve the b̶u̶t̶t̶e̶r̶ tendies."
 def mainProgram():
     for i in StockShares:
         name = i
