@@ -11,7 +11,8 @@ the last quote from the current quote and decides if text is green and
 Python:
 I made this in VSCode and I'm new to that so I'm unsure if it impacts the usage but I doubt it.
 If you are using VSCode make sure you have Python extension installed and all your paths right first.
-You will need to pip install Serial. Try this --> py -m pip install pyserial 
+You will need to pip install Serial. Try this --> py -m pip install pyserial
+
 Update the COM PORT number and it should work right off the bat during market hours. After hours and close
 will just report the last price during trading hours (i think).
 
