@@ -9,9 +9,12 @@
  * the board type probably doesn't matter as long as your LED Pin is matched
  * the #DEFINE PIN in line 29.
  * 
- * My matrix uses WS2812 LED's starting with LED0 at bottom left. 
- * Alternating pattern (zigzag pattern) 16 columns wide.
- * Your shit might be different. Use at your own risk ¯\_(ツ)_/¯ 
+ * My matrix uses WS2812 LED's starting with LED0 at bottom left. For some reason with
+ * this library, text displays correctly but the drawing commands are upside down. Not sure why but that forced 
+ * me to draw everything upside down (so down arrows are up and up arrows are down)...Hey! It's sort of like the
+ * real stock market! So, if you're trying to draw your own custom shapes instead of my arrows, take that into 
+ * consideration. Last, my matrix is an alternating pattern (zigzag) 16 columns wide.
+ * Your shit might be different ¯\_(ツ)_/¯ 
  * 
  * Disclaimer: I'm a smoothed brained ape 'coder'. It might break. It might not.
  * 
@@ -57,6 +60,15 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(16, 16, PIN,
   NEO_GRB            + NEO_KHZ800);
 
 
+bool JustArrow   = false;          //Set JustColors = true and TickerPrice = false, if you dont want to see the price or if you only have LED strips.
+bool TickerPrice  = false;        //Set JustColors = false and TickerPrice = True, to enable hyper advanced Ticker mode
+                                  //Set both = false or both = true: defaults to ticker mode.
+                                  //(EVENTUALLY) Set both = false or both = true: to just fill with color (pro tip: do this if you only have WS2812 LED strips AKA no matrix)
+                                  //Will work with a 16 x 16 LED Matrix made of WS2812 LEDs. 
+                                  //How you define the Matrix matters, see above for details. 
+                                  //If you set both to true or both to false it will just revert to ticker.
+
+
 
 //some variable shit
 float c;
@@ -65,50 +77,121 @@ String s;
 String yay = "Stonk go brrrr";
 String nay = "Buy tendie dip";
 String txt ;
-const uint16_t RED = matrix.Color(255, 0, 0);
-const uint16_t GREEN = matrix.Color(0, 255, 0);
+uint16_t color = 0;
+const uint16_t red = matrix.Color(255, 0, 0);
+const uint16_t green = matrix.Color(0, 255, 0);
+uint16_t black = matrix.Color(0, 0, 0);
+
+
+//Updoot arrow :)
+//Remember: the draw commands are upside down.
+//Think of it like listening to CNBC. If they say buy, you sell. If they say sell, you buy.
+
+void drawUpDoot(){
+    matrix.drawLine(7,13,7,7,color);
+    matrix.drawLine(8,13,8,7,color);
+    matrix.drawLine(4,6,11,6,color);
+    matrix.drawLine(5,5,10,5,color);
+    matrix.drawLine(6,4,9,4,color);
+    matrix.drawLine(7,3,8,3,color);
+    //matrix.show();
+    //delay(25);
+}
+
+//Downdoot arrow :(
+void drawDownDoot(){
+    matrix.drawLine(7,2,7,8,color);
+    matrix.drawLine(8,2,8,8,color);
+    matrix.drawLine(4,9,11,9,color);
+    matrix.drawLine(5,10,10,10,color);
+    matrix.drawLine(6,11,9,11,color);
+    matrix.drawLine(7,12,8,12,color);
+    //matrix.show();
+    //delay(25);
+}
+
+
+
 
 //set that shit up 
 void setup() 
 {
   
-  Serial.begin(9600);
-  Serial.flush();                   //probably doesn't do shit cuz Arduino
+  Serial.begin(115200);
+  Serial.flush();                                     //probably doesn't do shit cuz Arduino
   matrix.begin();
   matrix.setTextWrap(false);
   matrix.setBrightness(255);
-  matrix.setTextColor(GREEN);
+  matrix.setTextColor(green);
 }
  
-int x = matrix.width();             //i dunno prolly coulda defined this at the top.
+int x = matrix.width();                               //i dunno prolly coulda defined this at the top.
+
+
  
 void loop() 
 {
-  if(Serial.available()>0)          // Check for availablity of data at Serial Port
-  {                                 // and do math stuff before trying to call matrix
+  if(Serial.available()>0)                            // Check for availablity of data at Serial Port
+  {                                                   
     s = Serial.readStringUntil('$');
-    c = Serial.parseFloat();
+    c = Serial.parseFloat(); 
   
-    if (c <= last_c){               //compare current close price to last close price
-      matrix.setTextColor(GREEN);   //AKA hyper advanced algorithm to tell you to either buy or HODL
+    if (c >= last_c){                                 //compare current close price to last close price
+      matrix.fillScreen(0);
+      matrix.setTextColor(green);                     //AKA hyper advanced algorithm to tell you to either buy or HODL
       txt = yay;
+      color = green;
+      drawUpDoot();                                   
     }
     else{
-      matrix.setTextColor(RED);
+      matrix.fillScreen(0);
+      matrix.setTextColor(red);
       txt = nay;
+      color = red;
+      drawDownDoot();
     }
   }
-  matrix.fillScreen(0);             //draw that shit on the screen
-  matrix.setCursor(x, 0);           //top line displays ticker info
-  matrix.setTextSize(1);
-  matrix.print(s + '$'+ c);
-  matrix.setCursor(x, 8);           //bottom line tells you to buy or HODL,  we dont know how to sell
-  matrix.print(txt);
-  if(--x < -150) {
-    x = matrix.width();
+  
+  //Only executes in TickerPrice mode
+  
+  if (TickerPrice == true && JustArrow == false){
+    matrix.fillScreen(0);                             //draw scrolling ticker of GME and price.
+    matrix.setCursor(x, 0);                           //top line displays ticker info
+    matrix.setTextSize(1);
+    matrix.print(s + '$'+ c);
+    matrix.setCursor(x, 8);                           //bottom line tells you to buy or HODL,  I dont know how to sell
+    matrix.print(txt);
+    if(--x < -150) {
+      x = matrix.width();
+    }  
+  }
+  
+  //Only executes in JustArrow mode.
+  
+  if (TickerPrice == false && JustArrow == true){    //draw the up or down arrows only.
+    matrix.drawRect(0, 0, 16, 16,color);
+    matrix.show();
+  }
+
+  //Only executes when both modes are off (or both on as a fail safe). This just shows green leds if the current price is greater 
+  //than last price and red for the opposite.
+  
+  if (TickerPrice == false && JustArrow == false || TickerPrice == true && JustArrow == true){
+    TickerPrice = true;
+    JustArrow = false;
+     /* int x = 0;
+      int y_1=0;
+      int y_2=16;
+    for(int i = 0; i<=16 ; i++){
+      matrix.drawLine(x,y_1,x,y_2,color);
+      x = x++;
+    }
+    matrix.show();
+    delay(40);
+    */
   }
   matrix.show();
   last_c = c;
-  Serial.flush();                   //probably doesn't do shit cuz Arduino
+  Serial.flush();                                   //probably doesn't do shit cuz Arduino
   delay(40);
 }
