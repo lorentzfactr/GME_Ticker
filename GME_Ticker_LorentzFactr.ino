@@ -60,7 +60,7 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(16, 16, PIN,
   NEO_GRB            + NEO_KHZ800);
 
 
-bool JustArrow   = false;          //Set JustColors = true and TickerPrice = false, if you dont want to see the price or if you only have LED strips.
+bool JustArrow   = false;         //Set JustColors = true and TickerPrice = false, if you dont want to see the price or if you only have LED strips.
 bool TickerPrice  = false;        //Set JustColors = false and TickerPrice = True, to enable hyper advanced Ticker mode
                                   //Set both = false or both = true: defaults to ticker mode.
                                   //(EVENTUALLY) Set both = false or both = true: to just fill with color (pro tip: do this if you only have WS2812 LED strips AKA no matrix)
@@ -173,22 +173,11 @@ void loop()
     matrix.show();
   }
 
-  //Only executes when both modes are off (or both on as a fail safe). This just shows green leds if the current price is greater 
-  //than last price and red for the opposite.
+  //Only executes when both modes are off (or both on as a fail safe). 
   
   if (TickerPrice == false && JustArrow == false || TickerPrice == true && JustArrow == true){
     TickerPrice = true;
     JustArrow = false;
-     /* int x = 0;
-      int y_1=0;
-      int y_2=16;
-    for(int i = 0; i<=16 ; i++){
-      matrix.drawLine(x,y_1,x,y_2,color);
-      x = x++;
-    }
-    matrix.show();
-    delay(40);
-    */
   }
   matrix.show();
   last_c = c;
