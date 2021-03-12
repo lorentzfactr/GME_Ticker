@@ -18,6 +18,9 @@ You will need to pip install Serial. Try this --> py -m pip install pyserial
 Update the COM PORT number and it should work right off the bat during market hours. After hours and close
 will just report the last price during trading hours (i think).
 
+GME_Ticker_LorentzFactr.py --> Is for trading hours.
+Ticker_tester.py --> Is just for testing. Feel free to use it if you plan to change effects and want to test them afterhours.
+
 
 Arduino and Matrix:
 It requires a serial port connection and the GME_ticker.py script to display
